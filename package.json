@@ -1,0 +1,84 @@
+{
+  "name": "owon-hds-panel",
+  "productName": "OWON HDS Panel",
+  "version": "1.0.0",
+  "description": "OWON HDS272S osiloskop / multimetre / jenerator kontrol paneli",
+  "main": "main.js",
+  "author": "OWON HDS Panel",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64 --publish never"
+  },
+  "dependencies": {
+    "koffi": "^2.16.4",
+    "usb": "^2.19.1"
+  },
+  "devDependencies": {
+    "electron": "^37.10.3",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.owonhds.panel",
+    "productName": "OWON HDS Panel",
+    "directories": {
+      "output": "dist"
+    },
+    "npmRebuild": false,
+    "files": [
+      "main.js",
+      "preload.js",
+      "usb-backends.js",
+      "win-driver.js",
+      "renderer/**",
+      "package.json",
+      "!node_modules/koffi/build/koffi/!(win32_x64)/**",
+      "!node_modules/koffi/src/**",
+      "!node_modules/koffi/vendor/**",
+      "!node_modules/koffi/doc/**",
+      "!node_modules/usb/prebuilds/!(win32-x64)/**",
+      "!node_modules/usb/libusb/**",
+      "!node_modules/usb/src/**",
+      "!node_modules/usb/test/**"
+    ],
+    "extraResources": [
+      {
+        "from": "native",
+        "to": "native"
+      }
+    ],
+    "asarUnpack": [
+      "node_modules/koffi/**",
+      "node_modules/usb/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "OWON HDS Panel",
+      "artifactName": "OWON-HDS-Panel-Kurulum-${version}.exe"
+    },
+    "portable": {
+      "artifactName": "OWON-HDS-Panel-Tasinabilir-${version}.exe"
+    },
+    "publish": null
+  }
+}

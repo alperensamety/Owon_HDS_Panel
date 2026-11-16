@@ -1,0 +1,42 @@
+# Yeni bir Release yayınlandığında (ya da Actions sekmesinden elle başlatıldığında)
+# Windows .exe dosyalarını derler. Release'ten başlatıldıysa exe'leri o Release'e ekler.
+name: Windows derlemesi
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Kodu al
+        uses: actions/checkout@v4
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Bağımlılıkları yükle
+        run: npm ci
+
+      - name: Windows paketlerini derle
+        run: npx electron-builder --win --x64 --publish never
+
+      - name: Derlenen dosyaları sakla (Actions sekmesinden indirilebilir)
+        uses: actions/upload-artifact@v4
+        with:
+          name: OWON-HDS-Panel-Windows
+          path: dist/*.exe
+
+      - name: Release'e ekle
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.exe
